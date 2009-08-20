@@ -18,9 +18,11 @@
 			});
 			$('#delete_anchor').click(function() {
 				if (confirm('Are you sure you want to delete this page?')) {
-					$.post(this.href, {delete: 'delete'}, function() {
-						window.location.replace("/");
-					}, "json");
+					if (confirm('EVERYTHING on this page will be deleted. No history, nothing. Are super-duper sure you want to do this?')) {
+						$.post(this.href, {delete: 'delete'}, function() {
+							window.location.replace("/");
+						}, "json");
+					}
 				}
 				return false;
 			});
@@ -34,19 +36,25 @@
 			-moz-border-radius: 0 0 10px 10px;
 		}
 		.header h1 { color: #fff; font-size: 1.2em; margin: 0; padding: 0.5em 1em; }
-		.header a { color: #393; float: right; font-size: 0.6em; padding: 1.5em; text-decoration: none; }
+		.header a.action { color: #393; float: right; font-size: 0.6em; padding: 1.5em; text-decoration: none; }
+		.header a[rel=home] { color: #393; float: left; font-size: 1em; padding: 0.3em 0.4em; text-decoration: none; }
 		#content { padding: 0 1em; }
 		#edit { display: none; padding: 0 1em; }
 		#edit ul { list-style: none; margin: 0; padding: 0; }
 		#edit form { }
 		#edit textarea { height: 200px; width: 100%; }
+		#help { color: #999; font-size: 0.6em; margin-top: 3em; }
+		#help table { width: 70%; margin-left: 15%; }
+		#help table td { vertical-align: top; }
+		#help a { margin-left: 15%; }
 	</style>
 </head>
 <body>
 	<div id="container">
 		<div class="header">
-			<a href="#edit" id="edit_anchor">EDIT</a>
-			<% if @page.slug != 'Home' %><a href="/<%= @slug %>" id="delete_anchor">DELETE</a><% end %>
+			<a href="#edit" id="edit_anchor" class="action">EDIT</a>
+			<% if @page.slug != 'Home' %><a href="/<%= @slug %>" id="delete_anchor" class="action">DELETE</a><% end %>
+			<a href="/Home" title="home" rel="home">&#x2654</a>
 			<h1><%= @title %></h1>
 		</div>
 		<div class="section" id="content">
@@ -60,6 +68,36 @@
 					<li><input type="submit" value="Save"> or <button id="canceledit_anchor">Cancel</button></li>
 				</ul>
 			</form>
+			<div id="help">
+				<table>
+					<tr>
+						<th>Markup</th>
+						<th>What it does.</th>
+						<th>Example</th>
+					</tr>
+					<tr>
+						<td>[[...]]</td>
+						<td>Creates a link to another SlickWik page</td>
+						<td>Go [[Home]]</td>
+					</tr>
+					<tr>
+						<td>*</td>
+						<td>Create an unordered list</td>
+						<td>* some item<br>* another item<br>* yet another item</td>
+					</tr>
+					<tr>
+						<td>1.</td>
+						<td>Create an ordered list</td>
+						<td>1. item 1<br>2. item 2<br>3. item 3</td>
+					</tr>
+					<tr>
+						<td>#</td>
+						<td>Creates headings</td>
+						<td># Biggest Heading<br>## Bigger Heading<br>### Big Heading</td>
+					</tr>
+				</table>
+				<a href="http://daringfireball.net/projects/markdown/syntax">Full reference</a>
+			</div>
 		</div>
 	</div>
 </body>
