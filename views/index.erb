@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title><%= @title %> | SlickWik</title>
+	<script type="text/javascript" charset="utf-8" src="http://jqueryjs.googlecode.com/files/jquery-1.3.2.min.js"></script>
+	<script type="text/javascript" charset="utf-8">
+		$().ready(function(){
+			$('#edit_anchor').click(function() {
+				$('#content').hide();
+				$('#edit').show();
+				return false;
+			});
+			$('#canceledit_anchor').click(function() {
+				$('#edit').hide();
+				$('#content').show();
+				return false;
+			});
+			$('#delete_anchor').click(function() {
+				if (confirm('Are you sure you want to delete this page?')) {
+					$.post(this.href, {delete: 'delete'}, function() {
+						window.location.replace("/");
+					}, "json");
+				}
+				return false;
+			});
+		});
+	</script>
+	<style type="text/css" media="screen">
+		body { text-align: center; margin: 0; padding: 0; }
+		div#container { margin: 0 auto; text-align: left; width: 600px; }
+		.header {
+			background-color: #363;
+			-moz-border-radius: 0 0 10px 10px;
+		}
+		.header h1 { color: #fff; font-size: 1.2em; margin: 0; padding: 0.5em 1em; }
+		.header a { color: #393; float: right; font-size: 0.6em; padding: 1.5em; text-decoration: none; }
+		#content { padding: 0 1em; }
+		#edit { display: none; padding: 0 1em; }
+		#edit ul { list-style: none; margin: 0; padding: 0; }
+		#edit form { }
+		#edit textarea { height: 200px; width: 100%; }
+	</style>
+</head>
+<body>
+	<div id="container">
+		<div class="header">
+			<a href="#edit" id="edit_anchor">EDIT</a>
+			<% if @page.slug != 'Home' %><a href="/<%= @slug %>" id="delete_anchor">DELETE</a><% end %>
+			<h1><%= @title %></h1>
+		</div>
+		<div class="section" id="content">
+			<%=wik @page.content %>
+		</div>
+		<div class="section" id="edit">
+			<form action="/<%= @slug %>" method="post">
+				<input type="hidden" name="version" value="<%= @page.version %>">
+				<ul>
+					<li><textarea name="content"><%= @page.content %></textarea></li>
+					<li><input type="submit" value="Save"> or <button id="canceledit_anchor">Cancel</button></li>
+				</ul>
+			</form>
+		</div>
+	</div>
+</body>
+</html>
