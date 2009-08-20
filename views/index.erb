@@ -16,20 +16,10 @@
 				$('#content').show();
 				return false;
 			});
-			$('#delete_anchor').click(function() {
-				if (confirm('Are you sure you want to delete this page?')) {
-					if (confirm('EVERYTHING on this page will be deleted. No history, nothing. Are super-duper sure you want to do this?')) {
-						$.post(this.href, {delete: 'delete'}, function() {
-							window.location.replace("/");
-						}, "json");
-					}
-				}
-				return false;
-			});
 		});
 	</script>
 	<style type="text/css" media="screen">
-		body { text-align: center; margin: 0; padding: 0; }
+		body { font-family: sans-serif; text-align: center; margin: 0; padding: 0; }
 		div#container { margin: 0 auto; text-align: left; width: 600px; }
 		.header {
 			background-color: #363;
@@ -53,7 +43,6 @@
 	<div id="container">
 		<div class="header">
 			<a href="#edit" id="edit_anchor" class="action">EDIT</a>
-			<% if @page.slug != 'Home' %><a href="/<%= @slug %>" id="delete_anchor" class="action">DELETE</a><% end %>
 			<a href="/Home" title="home" rel="home">&#x2654</a>
 			<h1><%= @title %></h1>
 		</div>

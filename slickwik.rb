@@ -36,7 +36,7 @@ helpers do
   def wik(str)
     if not str.nil?
       wik = RDiscount.new(str).to_html
-      wik.gsub(/\[\[([0-9a-zA-Z_, \-]+?)\]\]/, '<a href="/\1">\1</a>')
+      wik.gsub(/\[\[(.+?)\]\]/, '<a href="/\1">\1</a>')
     end
   end
 end
@@ -75,12 +75,6 @@ post '/:slug' do
     page = Page.new(:slug => page_slug, :content => new_content)
     page.save
     redirect "/#{page_slug}"
-  
-  elsif params[:delete] == 'delete'
-    
-    page.destroy
-    content_type :json
-    "{status: 'ok'}"
     
   else
     
