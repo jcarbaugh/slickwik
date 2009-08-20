@@ -1,5 +1,4 @@
 #/usr/bin/ruby
-
 require 'rubygems'
 require 'sinatra'
 require 'dm-core'
@@ -8,9 +7,7 @@ require 'erb'
 
 ### Data Mapper
 
-configure do
-  DataMapper.setup(:default, "sqlite3:///#{Dir.pwd}/slickwik.db")
-end
+DataMapper.setup(:default, "sqlite3:///#{Dir.pwd}/slickwik.db")
 
 class Page
     include DataMapper::Resource
@@ -47,9 +44,7 @@ end
 ### helper functions
 
 def slugify(str)
-	str = str.gsub(/[^a-zA-Z0-9_ ]/,"")
-	str = str.gsub(/[ ]+/," ")
-	str = str.gsub(/ /,"_")
+  str.gsub(/[^a-zA-Z0-9_ ]/,"").gsub(/[ ]+/," ").gsub(/ /,"_")
 end
 
 ### routes
@@ -73,14 +68,12 @@ post '/:slug' do
   
   page_slug = slugify params[:slug]
   page = Page.first(:slug.like => page_slug)
-  
   new_content = params[:content]
   
   if page.nil?
     
     page = Page.new(:slug => page_slug, :content => new_content)
     page.save
-
     redirect "/#{page_slug}"
   
   elsif params[:delete] == 'delete'
@@ -92,14 +85,13 @@ post '/:slug' do
   else
     
     diff = nil # do real diff here of @page.content and new_content
-    
     version = page.version + 1
     
     page.content = new_content
     page.version = version
     page.changes << Change.new(:diff => diff, :version => version)
     page.save
-
+    
     redirect "/#{page_slug}"
     
   end
